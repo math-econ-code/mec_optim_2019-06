@@ -13,12 +13,7 @@ I will provide installation instructions for Windows and Mac users. If you are u
 2. Go to [RStudio download page](https://www.rstudio.com/products/rstudio/download/#download) and download and install.
 3. Compilation of some packages
    1. Windows users should also install [Rtools](https://cran.r-project.org/bin/windows/Rtools/).
-   2. Mac user should install Xcode and gfortran, the latter of which can be [obtained using](http://www.thecoatlessprofessor.com/programming/rcpp-rcpparmadillo-and-os-x-mavericks-lgfortran-and-lquadmath-error/)
-	````
-	curl -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2
-   sudo tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /
-   ````
-
+   2. Mac user should install Xcode and gfortran, the latter of which can be found [here](https://cran.r-project.org/bin/macosx/tools/).
 
 ## Anaconda
 
