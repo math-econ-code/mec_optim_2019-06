@@ -1,5 +1,5 @@
 # mec_optim_2019-06
-‘math+econ+code in Paris’ masterclass on optimal transport, choice and matching models at NYU Paris, Jun 17-21, 2019
+‘math+econ+code in Paris’ masterclass on optimal transport, choice and matching models at NYU Paris, Jun 17-21, 2019.
 
 # Getting set up
 
@@ -85,7 +85,7 @@ We will need a license to use Gurobi, (which is usually expensive), but there is
 
 4. Clone the mec_optim repo
    ```
-     git clone https://github.com/math-econ-code/mec_optim_2019-01
+     git clone https://github.com/math-econ-code/mec_optim_2019-06
    ```
 5. Whenever the repository is updated 
 
