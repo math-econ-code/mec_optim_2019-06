@@ -21,7 +21,7 @@ Git is really good version control. Anyone who has done a large project or even 
 
 * `foorbar_actuallyfinal`
 
-![verscontrol]
+![](verscontrol.jpg)
 
 If you were smart, you may have added dates or explained briefly what you were trying to do with a particular version of that file. Git is the way to do this properly, and in such a way that you can easily collaborate with others and all work on the project at the same time.
 
@@ -69,7 +69,7 @@ git status
 * No commits (saves) have been made yet.
 * I see some files in this folder you haven't told me to care about yet. Here they are...
 
-Before we can add `test.txt` we need to 'stage' it (The staging area is key feature of Git and can be a little strange at first. It would seem sensible to just commit changes instead of having to first stage them, then committing them. However staging allows very fine tuned control of our snapshots of our project before committing them. This will make version control and reverting changes much easier, but it of course relies on you having good habits.)
+Before we can add `new.txt` we need to 'stage' it (The staging area is key feature of Git and can be a little strange at first. It would seem sensible to just commit changes instead of having to first stage them, then committing them. However staging allows very fine tuned control of our snapshots of our project before committing them. This will make version control and reverting changes much easier, but it of course relies on you having good habits.)
 
 ```
 git add new.txt
@@ -84,7 +84,7 @@ git commit -m "Initial commit"
 
 Where `-m` is the flag for a commit message. 
 
-Now let's change up our `test.txt` file. 
+Now let's change up our `new.txt` file. 
 
 ```
 echo "Foobar!" >> new.txt 
@@ -164,15 +164,24 @@ And not only do our new files disappear, but the changes to `new.txt` disappear 
 git merge experimental
 ```
 
-And we would get a seamless merge. But let's make things a little bit harder and suppose we make a change on our master branch
+And we would get a seamless merge (which is great). This is because we hadn't made any commits to the master branch. However let's look at what happens if we had made some changes to the master branch before merging our branches. To do this we will revert ourselves to the "Updated new.txt" commit. First we need to find the id of that commit
 
+```
+git log --oneline
+```
+Then use the following command (we will explain this in detail in a later section)
+
+```
+git reset --hard <id of "Updated new.txt" commit>
+```
+Which will have reverted our master branch. Now let's make some changes on our master branch
 ```
 echo "Buzz" > new.txt
 git add -u
-git commit -m "Added Buzz!"
+git commit -m "Let's make a merge commit"
 ```
 
-Now `master` and `experimental` have diverged. To merge the changes in experimental into master
+Now `master` and `experimental` have diverged. On `master` `new.txt` contains `Buzz` and on `experimental` it contains `Fizz`. To merge the changes in experimental into master
 
 ```
 git merge experimental
@@ -193,14 +202,7 @@ Everything between `<<<<<<< HEAD` and `=======` is in the master branch and betw
 ```
 "Buzz"
 ```
-
-Everything between `<<<<<<< HEAD` and `=======` is in the master branch and between `=======` and `>>>>>>> experimental` in the experimental branch. Let's resolve this saving
-
-```
-"Buzz"
-```
-
-We can now stage and commit these stages to complete the merge.
+Note that VScode (and other code editors) have a nice automatic way to deal with merge conflicts. We can now stage and commit these stages to complete the merge.
 
 ```
 git add --all
@@ -226,30 +228,40 @@ git status
 
 There are 3 options here
 
-1. Discard all local changes, but save them for possible re-use [later](https://docs.gitlab.com/ee/topics/git/numerous_undo_possibilities_in_git/#quickly-save-local-changes)	
+1. Discard all local changes, but save them for possible re-use [later](https://docs.gitlab.com/ee/topics/git/numerous_undo_possibilities_in_git/#quickly-save-local-changes). For example you are making changes (that you like)
 
-  ```
-  git stash
-  ```
+    ```
+    echo "Some good changes" > new.txt
+    ```
+    But need to revert to a working version of your code, we can use
 
-  If going this route, you can switch to a different branch and do some work and come back to your stashed files using
+    ```
+    git stash
+    ```
 
-  ```
-  git stash list
-  git stash apply
-  ```
+    If going this route, you can switch to a different branch and do some work and come back to your stashed files using
+
+    ```
+    git stash list
+    ```
+  
+    Which lists all of the current stashed versions (from various commits)
+  
+    ```
+    git stash apply
+    ```
 
 2. Discarding local changes (permanently) to a file
 
-  ```
+    ```
     git checkout -- <file>
-  ```
+    ```
 
 3. Discard all local changes to all files permanently
 
-  ```
+    ```
     git reset --hard
-  ```
+    ```
 
 If the files have been staged, the 3 commands above work. But so does
 
@@ -264,10 +276,17 @@ Which will unstage the file to the current commit.
 If we want to undo committed changes, there are several different ways to do this. If we need to checkout a commit in a branch then we can use checkout. 
 
 ```
-git checkout -b new
-echo something > new.txt
+git checkout -b new_branch
+```
+This is a quick way to combine the commands `git branch new_branch` and `git checkout new_branch`
+
+```
+echo "Something" > new.txt
 git commit -am "Something"
-echo something1 > new.txt
+```
+This is a combination of `git add -u` and `git commit -m "Something"`
+```
+echo "Something else" > new.txt
 git commit -am "Something else"
 git log --oneline
 ```
@@ -278,20 +297,32 @@ We can checkout the commit for `Something`
 git checkout <Something-id>
 ```
 
-And if we want to, we can create a new branch
+The output of this command is very useful. It tells us that we are in a `detached HEAD` state, meaning that we are not on a proper branch. This is nice because we can do a bunch of changes without effecting any other branches. However this is not a permanent branch, so if we commit changes but then checkout another branch, we will lose this entire branch (and all the changes we just made). To fix this, let's create a new (permanent) branch
 
 ```
 git checkout -b Fixes
 ```
 
-And then merge this with the master branch, at some point in the future. Instead we could use the `reset` command
+Which we can merge with the master branch, at some point in the future. 
+
+If we want to leave the detached HEAD state, we can just checkout another branch
+
+```
+git checkout master
+```
+And let's merge the `new_branch` with the master branch
+
+```
+git merge new_branch
+```
+Now let's look at more permanent ways to revert to previous commits using `reset`
 
 ```
 git log --oneline
 git reset <Resolved-merge-conflicts-id>
 ```
 
-Which completely deletes the past history. This leads to much cleaner history, but we do lose some history (which we may need for later).
+Which deletes the commits between where we were and where we reset to.  . This leads to much cleaner history, but we do lose some history (which we may need for later).
 
 There is a good lesson to learn about using Git. If we do development on the `master` branch, then we can't use `checkout` and creating a new branch. Therefore we should only use `master` for stable code. Any development should be done on a `development` branch, and then when adding specific features using branches off the development branch. There exist some standardized workflows for Git branches (e.g. [git-flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)). These are likely overkill for a lot of the projects that we typically work on. But if you are part of a larger project they are worth considering.
 
