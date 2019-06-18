@@ -322,9 +322,13 @@ git log --oneline
 git reset <Resolved-merge-conflicts-id>
 ```
 
-Which deletes the commits between where we were and where we reset to.  . This leads to much cleaner history, but we do lose some history (which we may need for later).
+Which deletes the commits between where we were and where we reset to, and unstages the changes between the 2 commits, i.e. see
 
-There is a good lesson to learn about using Git. If we do development on the `master` branch, then we can't use `checkout` and creating a new branch. Therefore we should only use `master` for stable code. Any development should be done on a `development` branch, and then when adding specific features using branches off the development branch. There exist some standardized workflows for Git branches (e.g. [git-flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)). These are likely overkill for a lot of the projects that we typically work on. But if you are part of a larger project they are worth considering.
+```
+git status
+```
+
+There is a good lesson to learn about using Git. If we do development on the `master` branch, then we can't use `checkout` and create a new branch. Therefore we should only use `master` for stable code. Any development should be done on a `development` branch, and then when adding specific features using branches off the development branch. There exist some standardized workflows for Git branches (e.g. [git-flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)). These are likely overkill for a lot of the projects that we typically work on. But if you are part of a larger project they are worth considering.
 
 
 
